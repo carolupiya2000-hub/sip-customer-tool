@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IBSL | SIP Customer Experience Builder</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1a6b2f;
+    --green-light: #2a8a40;
+    --green-dark: #0f4520;
+    --gold: #c9a227;
+    --gold-light: #e8bb3a;
+    --grey: #4a4a4a;
+    --grey-light: #f5f5f5;
+    --white: #ffffff;
+    --border: #d0d0d0;
+    --shadow: 0 4px 24px rgba(0,0,0,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f0f2ed;
+    color: var(--grey);
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--green-dark);
+    color: white;
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo-ring {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 2px solid var(--gold);
+  }
+  .logo-ring img { width: 52px; height: 52px; object-fit: contain; }
+  .header-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    letter-spacing: 0.02em;
+    color: white;
+  }
+  .header-text p {
+    font-size: 0.75rem;
+    color: var(--gold-light);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .header-badge {
+    margin-left: auto;
+    background: var(--gold);
+    color: var(--green-dark);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+  }
+
+  /* MAIN */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 36px 24px 60px;
+  }
+
+  .intro {
+    background: white;
+    border-left: 5px solid var(--gold);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow);
+  }
+  .intro h2 {
+    font-family: 'Playfair Display', serif;
+    color: var(--green-dark);
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+  .intro p {
+    font-size: 0.88rem;
+    color: #555;
+    line-height: 1.65;
+  }
+  .intro strong { color: var(--green); }
+
+  /* CARE GRID */
+  .care-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+  @media (max-width: 720px) { .care-grid { grid-template-columns: 1fr; } }
+
+  .care-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: box-shadow 0.2s;
+  }
+  .care-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.14); }
+
+  .card-header {
+    background: var(--green);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .care-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .card-header-text h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+  .card-header-text .source {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 2px;
+  }
+  .card-header-text .experience {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.88);
+    margin-top: 6px;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .card-body {
+    padding: 16px 20px 20px;
+  }
+  .card-limit {
+    font-size: 0.73rem;
+    color: var(--gold);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .selection-count {
+    background: var(--green);
+    color: white;
+    border-radius: 10px;
+    padding: 1px 8px;
+    font-size: 0.7rem;
+  }
+  .selection-count.full { background: var(--gold); color: var(--green-dark); }
+
+  .option-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .option-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 7px;
+    border: 1.5px solid var(--border);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .option-item:hover {
+    border-color: var(--green-light);
+    background: #f0f8f2;
+  }
+  .option-item.selected {
+    border-color: var(--green);
+    background: #e8f5ec;
+  }
+  .option-item.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  .option-item.selected.disabled {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .checkbox {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    background: white;
+  }
+  .option-item.selected .checkbox {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .checkbox svg { display: none; }
+  .option-item.selected .checkbox svg { display: block; }
+
+  .option-num {
+    font-size: 0.68rem;
+    color: var(--gold);
+    font-weight: 700;
+    min-width: 16px;
+    margin-top: 1px;
+  }
+  .option-text { font-size: 0.82rem; line-height: 1.45; color: #444; }
+
+  /* OUTPUT SECTION */
+  .output-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .output-header {
+    background: var(--green-dark);
+    color: white;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .output-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+  }
+  .output-header .lens-badge {
+    font-size: 0.7rem;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .output-body {
+    padding: 28px;
+  }
+  .sip-statement {
+    font-size: 0.97rem;
+    line-height: 1.85;
+    color: #333;
+    min-height: 80px;
+  }
+  .sip-placeholder {
+    color: #bbb;
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+  .sip-statement em { font-style: italic; color: #999; }
+
+  .highlight-green { color: var(--green-dark); font-weight: 600; }
+  .highlight-gold { color: #8a6a00; font-weight: 600; }
+
+  .output-actions {
+    padding: 0 28px 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 10px 22px;
+    border-radius: 7px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.83rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+  }
+  .btn-primary {
+    background: var(--green);
+    color: white;
+  }
+  .btn-primary:hover { background: var(--green-light); }
+  .btn-secondary {
+    background: var(--grey-light);
+    color: var(--grey);
+    border: 1.5px solid var(--border);
+  }
+  .btn-secondary:hover { background: #e8e8e8; }
+  .btn-gold {
+    background: var(--gold);
+    color: var(--green-dark);
+  }
+  .btn-gold:hover { background: var(--gold-light); }
+
+  /* DIVIDER */
+  .section-divider {
+    border: none;
+    border-top: 2px solid #e0e5e0;
+    margin: 4px 28px 20px;
+  }
+
+  /* SELECTIONS SUMMARY */
+  .selections-summary {
+    padding: 0 28px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .sel-tag {
+    background: #e8f5ec;
+    border: 1px solid var(--green);
+    color: var(--green-dark);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 0.73rem;
+    font-weight: 500;
+  }
+  .sel-tag .tag-letter {
+    font-weight: 700;
+    color: var(--gold);
+    margin-right: 4px;
+  }
+
+  /* COPY TOAST */
+  #copyToast {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    background: var(--green-dark);
+    color: white;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 999;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }
+  #copyToast.show { opacity: 1; }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    header { padding: 14px 16px; }
+    main { padding: 20px 12px 40px; }
+    .output-body, .output-actions, .selections-summary { padding-left: 16px; padding-right: 16px; }
+    .section-divider { margin-left: 16px; margin-right: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-ring">
+    <img src="https://raw.githubusercontent.com/IBSLeadership/ibsl-assets/main/IBSL_Triumphant.png"
+         onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'font-family:serif;font-weight:700;color:#1a6b2f;font-size:1.1rem;\'>IBSL</span>'"
+         alt="IBSL Logo">
+  </div>
+  <div class="header-text">
+    <h1>Strategy2Results — Lens 2</h1>
+    <p>Success in Practice · Customer Experience & Value</p>
+  </div>
+  <div class="header-badge">Live Session Tool</div>
+</header>
+
+<main>
+
+  <div class="intro">
+    <h2>Build the Customer Experience & Value Statement</h2>
+    <p>
+      Select <strong>up to 2 descriptors per CARE dimension</strong> that best reflect how your organisation intends to deliver value to customers.
+      Your selections will compose the <strong>SIP Customer Experience & Value Statement</strong> — removing ambiguity for CXOs as strategy moves from vision to results.
+    </p>
+  </div>
+
+  <div class="care-grid" id="careGrid"></div>
+
+  <div class="output-section">
+    <div class="output-header">
+      <h2>SIP — Customer Experience & Value Statement</h2>
+      <span class="lens-badge">Lens 2 Output</span>
+    </div>
+    <hr class="section-divider">
+    <div class="selections-summary" id="selectionsSummary"></div>
+    <div class="output-body">
+      <div class="sip-statement" id="sipStatement">
+        <span class="sip-placeholder">Select descriptors above to generate your statement…</span>
+      </div>
+    </div>
+    <div class="output-actions">
+      <button class="btn btn-primary" onclick="generateStatement()">Generate Statement</button>
+      <button class="btn btn-gold" onclick="copyStatement()">Copy Statement</button>
+      <button class="btn btn-secondary" onclick="resetAll()">Reset All</button>
+    </div>
+  </div>
+
+</main>
+
+<div id="copyToast">Statement copied to clipboard ✓</div>
+
+<script>
+const CARE_DATA = [
+  {
+    letter: "C",
+    title: "Connection Value",
+    source: "Source: People",
+    experience: "Customers feel understood, respected, and supported by the people representing the organisation.",
+    options: [
+      "Genuine listening and understanding of customer needs",
+      "Personalised interactions rather than scripted responses",
+      "Employees who take ownership of customer issues",
+      "Respectful and professional treatment in every interaction",
+      "Proactive communication and follow-up",
+      "Empathetic handling of concerns or complaints",
+      "Confidence in the competence of employees",
+      "Consistent relationship management and continuity of contact",
+      "Advice and guidance that improves customer decisions",
+      "A sense that the organisation genuinely cares about customer success"
+    ],
+    sentences: [
+      "Our people listen genuinely and seek to understand what each customer truly needs.",
+      "Every customer interaction is personalised — not scripted.",
+      "Our employees take full ownership of customer issues until they are resolved.",
+      "Customers are treated with respect and professionalism in every single interaction.",
+      "We communicate proactively and follow up before customers need to ask.",
+      "Concerns and complaints are handled with empathy and a solutions-first mindset.",
+      "Customers trust in the competence of every person they engage with.",
+      "We invest in consistent relationship management so customers always have continuity of contact.",
+      "Our advice and guidance actively improves the decisions our customers make.",
+      "Customers know we genuinely care about their success — not just our transaction."
+    ]
+  },
+  {
+    letter: "A",
+    title: "Access Value",
+    source: "Source: Platforms",
+    experience: "Customers can easily interact with the organisation through responsive, reliable digital and service channels.",
+    options: [
+      "Seamless access through intuitive digital platforms",
+      "Fast response times across digital and service channels",
+      "Reliable systems that work without disruption",
+      "Real-time access to information and services",
+      "Multiple convenient channels for interaction",
+      "Simple self-service capabilities",
+      "Secure and trustworthy digital interactions",
+      "Transparent tracking of requests or transactions",
+      "Consistent experience across devices and platforms",
+      "Immediate acknowledgement and visibility of customer requests"
+    ],
+    sentences: [
+      "Customers access our services through intuitive, seamless digital platforms.",
+      "We respond fast — across every digital and service channel we operate.",
+      "Our systems are reliable and available when customers need them, without disruption.",
+      "Customers have real-time access to the information and services they need.",
+      "We provide multiple convenient channels so customers can interact on their terms.",
+      "Self-service is simple, empowering customers to get results without unnecessary steps.",
+      "Digital interactions with us are secure and trustworthy at every point.",
+      "Customers can track their requests and transactions transparently at any time.",
+      "The experience is consistent whether customers are on mobile, desktop, or any channel.",
+      "Every customer request is immediately acknowledged with full visibility from the start."
+    ]
+  },
+  {
+    letter: "R",
+    title: "Results Value",
+    source: "Source: Products",
+    experience: "Customers receive solutions that actually solve their problems and improve their outcomes.",
+    options: [
+      "Solutions that reliably solve the customer's core problem",
+      "Consistent product performance and reliability",
+      "Measurable improvement in customer outcomes",
+      "High-quality products that meet or exceed expectations",
+      "Innovative solutions that enhance customer capability",
+      "Products that simplify the customer's work or life",
+      "Reliable delivery of promised outcomes",
+      "Solutions that improve efficiency or productivity",
+      "Tangible return on the customer's investment",
+      "Confidence that the product will work when needed"
+    ],
+    sentences: [
+      "Our solutions reliably solve the problems at the core of what our customers face.",
+      "Our products perform consistently — customers can count on that, every time.",
+      "We deliver measurable improvements in customer outcomes, not just deliverables.",
+      "Quality is non-negotiable; our products meet or exceed what customers expect.",
+      "We bring innovative solutions that actively enhance our customers' capability.",
+      "Our products make our customers' work simpler and their lives less complicated.",
+      "We deliver on what we promise — reliably and without excuses.",
+      "Customers experience real gains in efficiency and productivity through what we provide.",
+      "Customers see a tangible return on their investment in our solutions.",
+      "Customers have full confidence that our product will perform exactly when it matters most."
+    ]
+  },
+  {
+    letter: "E",
+    title: "Effort Value",
+    source: "Source: Processes",
+    experience: "Customers experience simple, predictable processes that require minimal effort to achieve results.",
+    options: [
+      "Simple and intuitive customer journeys",
+      "Minimal steps required to complete transactions",
+      "Fast resolution of issues or requests",
+      "Clear and predictable processes",
+      "Reduced paperwork or administrative burden",
+      "No need to repeat information across interactions",
+      "Efficient onboarding and setup experiences",
+      "Transparent status updates throughout processes",
+      "Reliable service delivery timelines",
+      "Quick escalation and resolution when problems arise"
+    ],
+    sentences: [
+      "The journey from need to resolution is simple and intuitive for every customer.",
+      "We minimise the steps required — customers reach outcomes without unnecessary effort.",
+      "Issues and requests are resolved fast, without customers having to chase us.",
+      "Our processes are clear and predictable, so customers always know what to expect.",
+      "We remove administrative burden, reducing paperwork and bureaucratic friction.",
+      "Customers never need to repeat themselves — we carry context across every interaction.",
+      "Onboarding is efficient and seamless, so customers can start realising value immediately.",
+      "Customers receive transparent status updates throughout every process and touchpoint.",
+      "Our delivery timelines are reliable — we set expectations and we meet them.",
+      "When problems arise, escalation is quick and resolution is decisive."
+    ]
+  }
+];
+
+const selections = { C: [], A: [], R: [], E: [] };
+const MAX_PER = 2;
+
+function buildUI() {
+  const grid = document.getElementById('careGrid');
+  CARE_DATA.forEach(dim => {
+    const card = document.createElement('div');
+    card.className = 'care-card';
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="care-letter">${dim.letter}</div>
+        <div class="card-header-text">
+          <h3>${dim.title}</h3>
+          <div class="source">${dim.source}</div>
+          <div class="experience">${dim.experience}</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-limit">
+          Select up to 2
+          <span class="selection-count" id="count-${dim.letter}">0 / 2</span>
+        </div>
+        <ul class="option-list" id="list-${dim.letter}">
+          ${dim.options.map((opt, i) => `
+            <li class="option-item" data-dim="${dim.letter}" data-idx="${i}" onclick="toggleOption('${dim.letter}', ${i})">
+              <div class="checkbox">
+                <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                  <path d="M1 4L4 7L9 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <span class="option-num">${i + 1}.</span>
+              <span class="option-text">${opt}</span>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function toggleOption(dim, idx) {
+  const sel = selections[dim];
+  const pos = sel.indexOf(idx);
+  if (pos > -1) {
+    sel.splice(pos, 1);
+  } else {
+    if (sel.length >= MAX_PER) return;
+    sel.push(idx);
+  }
+  refreshCard(dim);
+  refreshOutput();
+}
+
+function refreshCard(dim) {
+  const sel = selections[dim];
+  const items = document.querySelectorAll(`#list-${dim} .option-item`);
+  items.forEach(item => {
+    const idx = parseInt(item.dataset.idx);
+    const isSelected = sel.includes(idx);
+    const isFull = sel.length >= MAX_PER && !isSelected;
+    item.classList.toggle('selected', isSelected);
+    item.classList.toggle('disabled', isFull);
+  });
+  const countEl = document.getElementById(`count-${dim}`);
+  countEl.textContent = `${sel.length} / 2`;
+  countEl.className = 'selection-count' + (sel.length >= MAX_PER ? ' full' : '');
+}
+
+function refreshOutput() {
+  // Summary tags
+  const summary = document.getElementById('selectionsSummary');
+  summary.innerHTML = '';
+  CARE_DATA.forEach(dim => {
+    selections[dim.letter].forEach(idx => {
+      const tag = document.createElement('span');
+      tag.className = 'sel-tag';
+      tag.innerHTML = `<span class="tag-letter">${dim.letter}</span>${dim.options[idx].substring(0, 40)}${dim.options[idx].length > 40 ? '…' : ''}`;
+      summary.appendChild(tag);
+    });
+  });
+}
+
+function generateStatement() {
+  const parts = [];
+  CARE_DATA.forEach(dim => {
+    const sel = selections[dim.letter];
+    if (sel.length > 0) {
+      const sents = sel.map(i => dim.sentences[i]);
+      parts.push(sents.join(' '));
+    }
+  });
+
+  const el = document.getElementById('sipStatement');
+  if (parts.length === 0) {
+    el.innerHTML = '<span class="sip-placeholder">Select descriptors above to generate your statement…</span>';
+    return;
+  }
+  el.textContent = parts.join(' ');
+}
+
+function copyStatement() {
+  const el = document.getElementById('sipStatement');
+  const text = el.textContent;
+  if (!text || el.querySelector('.sip-placeholder')) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const toast = document.getElementById('copyToast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  });
+}
+
+function resetAll() {
+  Object.keys(selections).forEach(k => selections[k] = []);
+  CARE_DATA.forEach(dim => refreshCard(dim.letter));
+  refreshOutput();
+  document.getElementById('sipStatement').innerHTML = '<span class="sip-placeholder">Select descriptors above to generate your statement…</span>';
+}
+
+buildUI();
+</script>
+</body>
+</html>
